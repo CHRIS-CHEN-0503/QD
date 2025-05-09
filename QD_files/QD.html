@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="您的名字 (可選)">
+
+<title>庫存週轉次數分析報告</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="QD_files/libs/clipboard/clipboard.min.js"></script>
+<script src="QD_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="QD_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="QD_files/libs/quarto-html/popper.min.js"></script>
+<script src="QD_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="QD_files/libs/quarto-html/anchor.min.js"></script>
+<link href="QD_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="QD_files/libs/quarto-html/quarto-syntax-highlighting-985aa47af68dae11cd4d235c71fb941e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="QD_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="QD_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="QD_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">庫存週轉次數分析報告</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>您的名字 (可選) </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">Invalid Date</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="庫存週轉次數趨勢圖" class="level2">
+<h2 class="anchored" data-anchor-id="庫存週轉次數趨勢圖">庫存週轉次數趨勢圖</h2>
+<p>以下是根據 Google Sheets 資料生成的庫存週轉次數趨勢圖：</p>
+</section>
+<section id="將所有的-r-程式碼放在這個程式碼區塊中執行" class="level1">
+<h1>將所有的 R 程式碼放在這個程式碼區塊中執行</h1>
+</section>
+<section id="載入所需的套件" class="level1">
+<h1>載入所需的套件</h1>
+</section>
+<section id="請確保這些套件已經安裝-install.packagescgooglesheets4-dplyr-tidyr-ggplot2-knitr-showtext-sysfonts" class="level1">
+<h1>請確保這些套件已經安裝 (install.packages(c(“googlesheets4”, “dplyr”, “tidyr”, “ggplot2”, “knitr”, “showtext”, “sysfonts”)))</h1>
+<p>library(googlesheets4) # 用於讀取 Google Sheets library(dplyr) # 用於資料處理 (%&gt;% 管線運算子、select, mutate, filter) library(tidyr) # 用於資料重塑 (pivot_longer) library(ggplot2) # 用於資料視覺化 library(knitr) # 如果需要在 Quarto 中生成表格等 library(showtext) # 用於字體處理，確保中文字體正確顯示和嵌入 library(sysfonts) # showtext 的依賴套件，用於查找和添加字體</p>
+</section>
+<section id="showtext-字體處理設定" class="level1">
+<h1>showtext 字體處理設定</h1>
+</section>
+<section id="添加您想使用的字體到-r-的字體資料庫" class="level1">
+<h1>添加您想使用的字體到 R 的字體資料庫</h1>
+</section>
+<section id="請根據您電腦上微軟正黑體字體檔案的實際路徑和檔案名進行調整" class="level1">
+<h1><strong>請根據您電腦上微軟正黑體字體檔案的實際路徑和檔案名進行調整</strong></h1>
+</section>
+<section id="這裡使用-windows-系統的典型路徑和檔案名作為範例" class="level1">
+<h1>這裡使用 Windows 系統的典型路徑和檔案名作為範例</h1>
+<p>font_add( “Microsoft JhengHei”, # 在 R 中用於 theme() 的字體家族名稱 regular = “C:/Windows/Fonts/msjh.ttc”, # 標準字體檔案路徑 bold = “C:/Windows/Fonts/msjhbd.ttc” # 粗體字體檔案路徑 (如果需要) )</p>
+</section>
+<section id="啟用-showtext-的自動處理功能" class="level1">
+<h1>啟用 showtext 的自動處理功能</h1>
+</section>
+<section id="這會讓-r-的繪圖設備自動使用-showtext-來處理文字渲染" class="level1">
+<h1>這會讓 R 的繪圖設備自動使用 showtext 來處理文字渲染</h1>
+<p>showtext_auto()</p>
+</section>
+<section id="showtext_optsdpi-300-可選設定-dpi影響文字大小比例" class="level1">
+<h1>showtext_opts(dpi = 300) # 可選：設定 DPI，影響文字大小比例</h1>
+</section>
+<section id="設定您的-google-sheets-分享連結和工作表名稱" class="level1">
+<h1>設定您的 Google Sheets 分享連結和工作表名稱</h1>
+</section>
+<section id="請將以下連結和名稱替換成您的實際資訊" class="level1">
+<h1>請將以下連結和名稱替換成您的實際資訊</h1>
+<p>sheet_url &lt;- “<a href="https://docs.google.com/spreadsheets/d/1GkbTMO84splVGtIE2gOJaGcD7sPb0847MchUmyTTWJE/edit?pli=1&amp;gid=623332197">https://docs.google.com/spreadsheets/d/1GkbTMO84splVGtIE2gOJaGcD7sPb0847MchUmyTTWJE/edit?pli=1&amp;gid=623332197</a>” # 您的 Google Sheets URL sheet_name &lt;- “數據紀錄” # 您的工作表名稱</p>
+</section>
+<section id="讀取-google-sheets-資料-範圍從-a-到-y" class="level1">
+<h1>讀取 Google Sheets 資料 (範圍從 A 到 Y)</h1>
+<p>sheet_data_raw &lt;- read_sheet( sheet_url, sheet = sheet_name, range = “A:Y”, # 設定讀取範圍從 A 欄到 Y 欄，確保包含所有庫別的週轉次數數據 col_names = TRUE # 假設第一行是欄位名稱 )</p>
+</section>
+<section id="資料清理與重塑" class="level1">
+<h1>資料清理與重塑</h1>
+</section>
+<section id="將資料從原始格式轉換為適合-ggplot2-繪圖的長格式" class="level1">
+<h1>將資料從原始格式轉換為適合 ggplot2 繪圖的長格式</h1>
+<p>sheet_data_selected &lt;- sheet_data_raw %&gt;% # 選取需要的欄位並重新命名以便後續使用 select( 日期 = <code>資料日期</code>, # 選取並重新命名日期欄位 總倉 = <code>總倉當期30天週轉次數</code>, # 選取總倉週轉次數 (使用實際讀取到的欄位名稱) PT = <code>PT當期30天週轉次數</code>, # 選取 PT 週轉次數 (使用實際讀取到的欄位名稱) PS = <code>PS當期30天週轉次數</code>, # 選取 PS 週轉次數 (使用實際讀取到的欄位名稱) PH = <code>PH當期30天週轉次數</code>, # 選取 PH 週轉次數 (使用實際讀取到的欄位名稱) PK = <code>PK當期30天週轉次數</code> # 選取 PK 週轉次數 (使用實際讀取到的欄位名稱) ) %&gt;% # 將所有週轉次數欄位從寬格式轉換為長格式 pivot_longer( cols = c(總倉, PT, PS, PH, PK), # 指定需要轉換的欄位，包含所有五個庫別 names_to = “類別”, # 新增一個欄位 ‘類別’ 來儲存原來的欄位名稱 values_to = “週轉次數” # 新增一個欄位 ‘週轉次數’ 來儲存對應的數值 ) %&gt;% # 進行資料清理和型態轉換 mutate( 週轉次數 = as.numeric(週轉次數), # 確保週轉次數為數值型態 日期_Date = as.Date(日期), # 先將原始日期轉換為 Date 型態，用於確保 factor 順序 日期 = factor(日期_Date) # 將 Date 型態的日期轉換為 factor 型態，用於 X 軸的等距排列 ) %&gt;% # 移除不再需要的欄位或 NA 值 filter(!is.na(週轉次數)) %&gt;% # 移除週轉次數為 NA 的行，NA 的點不會被繪製 select(-日期_Date) # 移除用於轉換的中間日期欄位，只保留 factor 日期</p>
+</section>
+<section id="生成圖表" class="level1">
+<h1>生成圖表</h1>
+</section>
+<section id="定義每個類別對應的顏色確保包含所有五個庫別" class="level1">
+<h1>定義每個類別對應的顏色，確保包含所有五個庫別</h1>
+<p>category_colors &lt;- c( “總倉” = “grey”, # 總倉顏色 “PT” = “pink”, # PT 顏色 “PS” = “darkgreen”, # PS 顏色 “PH” = “orange”, # PH 顏色 “PK” = “blue” # PK 顏色 )</p>
+</section>
+<section id="創建-ggplot-圖表對象" class="level1">
+<h1>創建 ggplot 圖表對象</h1>
+<p>turnover_plot &lt;- ggplot( sheet_data_selected, # 使用清理重塑後的資料，包含所有五個類別且日期為 factor aes( x = 日期, # 使用 factor 型態的 日期 欄位作為 X 軸，實現等距排列 y = 週轉次數, # 週轉次數作為 Y 軸 color = 類別, # 顏色根據 ‘類別’ 欄位來區分 group = 類別 # 確保同一個類別的點連成一條線 ) ) + geom_line(size = 1.2) + # 線條粗細 geom_point(size = 4) + # 點的大小 # 添加數據標籤 geom_text( aes(label = paste0(sprintf(“%.1f”, 週轉次數), ” 次”)), # 格式化標籤為一位小數並加上 ’ 次’ vjust = -1, # 垂直調整標籤位置 size = 4, # 標籤文字大小 color = “white” # 標籤文字顏色 ) + # 設定 Y 軸範圍和刻度 scale_y_continuous(limits = c(0, 5), breaks = seq(0, 5, by = 0.5)) +</p>
+<p># 手動設定每個類別的顏色，使用上面定義的 category_colors scale_color_manual(values = category_colors) +</p>
+<p># 設定圖表標題和軸標籤 labs( title = “庫存週轉次數分析”, # 圖表主標題 x = ““, # X 軸標籤移除，刻度標籤直接顯示日期 (factor levels) y =”週轉次數 (次)“, # Y 軸標籤 color =”類別” # 圖例標題 (圖例本身在 theme 中移除了標題文字) ) + # 調整圖表主題和外觀 (科技感風格 + 微軟正黑體字體) theme( # 設定字體家族為 微軟正黑體 text = element_text(family = “Microsoft JhengHei”), # 設定圖表所有文字的字體</p>
+<pre><code># 背景顏色設定
+panel.background = element_rect(fill = "#1a1a1a", colour = NA), # 繪圖區域背景
+plot.background = element_rect(fill = "#1a1a1a", colour = NA),  # 整個圖表背景
+
+# 格線設定
+panel.grid.major = element_line(colour = "#404040"), # 主要格線顏色
+panel.grid.minor = element_blank(), # 移除次要格線
+panel.grid.major.x = element_blank(), # 移除 X 軸主要格線
+
+# 軸線、刻度及文字顏色設定
+axis.line = element_line(colour = "#cccccc"), # 軸線顏色
+axis.ticks = element_line(colour = "#cccccc"), # 刻度線顏色
+axis.text = element_text(colour = "#cccccc", size = 10), # 軸刻度文字顏色和大小
+axis.title = element_text(colour = "#cccccc", size = 12, face = "bold"), # 軸標籤文字顏色和大小
+
+# 標題顏色設定
+plot.title = element_text(colour = "#ffffff", size = 14, face = "bold", hjust = 0.5), # 標題顏色和位置
+
+# 圖例外觀設定
+legend.background = element_rect(fill = "#1a1a1a", colour = NA), # 圖例背景顏色
+legend.key = element_rect(fill = "#1a1a1a", colour = NA),       # 圖例 key 背景顏色
+legend.text = element_text(colour = "#cccccc"),                 # 圖例文字顏色
+legend.position = "top", # 圖例位置
+legend.justification = "right", # 圖例對齊方式
+legend.direction = "horizontal", # 圖例排列方向
+legend.title = element_blank() # 移除圖例標題文字</code></pre>
+<p>)</p>
+</section>
+<section id="顯示圖表" class="level1">
+<h1>顯示圖表</h1>
+</section>
+<section id="在-quarto-中print-會將圖表嵌入到報告中" class="level1">
+<h1>在 Quarto 中，print() 會將圖表嵌入到報告中</h1>
+<p>print(turnover_plot)</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
