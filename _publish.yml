@@ -1,0 +1,4 @@
+- source: QD.qmd
+  quarto-pub:
+    - id: a0c128fd-38ff-4b82-ab1a-3bf0799cb653
+      url: https://bu019990.quarto.pub/111

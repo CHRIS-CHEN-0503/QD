@@ -3,3 +3,4 @@ project:
 
 editor: visual
 
+output: html_document
